@@ -40,4 +40,4 @@ const UserSchema = new Schema<TUser>({
   isDeleted: { type: Boolean },
 });
 
-export const Student = model<TUser, UserModel>("User", UserSchema);
+export const User = model<TUser, UserModel>("User", UserSchema);
