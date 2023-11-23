@@ -48,4 +48,17 @@ UserSchema.statics.isUserExists = async function (userId: string) {
   return existingUser;
 };
 
+//creating a custom static method check single user
+// UserSchema.statics.isUserSingleExists = async function (userId: string) {
+//   const existingSingleUser = await User.findOne({ userId })
+//     .select("-password")
+//     .lean()
+//     .exec();
+//   // return existingSingleUser;
+//   if (!existingSingleUser) {
+//     return null; // User not found
+//   }
+//   return existingSingleUser;
+// };
+
 export const User = model<TUser, UserModel>("User", UserSchema);

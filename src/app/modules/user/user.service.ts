@@ -24,7 +24,21 @@ const getAllUserFromDB = async () => {
   return result;
 };
 
+const getSingleUserFromDB = async (userId: string) => {
+  const result = await User.findOne({ userId })
+    .select("-password")
+    .lean()
+    .exec();
+  //using aggregate
+  //   const result = await User.aggregate([{ $match: { userId } }]);
+  if (!result) {
+    return null; // User not found
+  }
+  return result;
+};
+
 export const UserService = {
   createUserIntuDB,
   getAllUserFromDB,
+  getSingleUserFromDB,
 };

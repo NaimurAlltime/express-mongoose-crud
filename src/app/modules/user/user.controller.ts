@@ -48,7 +48,46 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleUser = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const result = await UserService.getSingleUserFromDB(userId);
+
+  if (result === null) {
+    res.status(404).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
+    });
+    return;
+  }
+
+  try {
+    const { userId } = req.params;
+
+    const result = await UserService.getSingleUserFromDB(userId);
+
+    //send response
+    res.status(200).json({
+      success: true,
+      message: "User fetched successfully!",
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    // console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+      error: error,
+    });
+  }
+};
+
 export const UserControllers = {
   createController,
   getAllUsers,
+  getSingleUser,
 };
