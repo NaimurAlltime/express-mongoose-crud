@@ -16,6 +16,7 @@ const createController = async (req: Request, res: Response) => {
       message: "User created successfully!",
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // console.log(error);
     res.status(500).json({
