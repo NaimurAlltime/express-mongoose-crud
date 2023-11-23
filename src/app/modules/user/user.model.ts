@@ -1,43 +1,30 @@
 import { model, Schema } from "mongoose";
-import {
-  TUser,
-  TUserAddress,
-  TUserFullName,
-  TUserOrder,
-  UserModel,
-} from "./user.interface";
+import { TUser, UserModel } from "./user.interface";
 
-// Define sub user schemas
-const UserFullNameSchema = new Schema<TUserFullName>({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-});
-
-const UserAddressSchema = new Schema<TUserAddress>({
-  street: { type: String, required: true },
-  city: { type: String, required: true },
-  country: { type: String, required: true },
-});
-
-const UserOrderSchema = new Schema<TUserOrder>({
-  productName: { type: String, required: true },
-  price: { type: Number, required: true },
-  quantity: { type: Number, required: true },
-});
-
-// Define the main User schema
-const UserSchema = new Schema<TUser>({
-  userId: { type: String, required: true, unique: true },
-  username: { type: String, required: true, unique: true },
+const UserSchema = new Schema<TUser, UserModel>({
+  userId: { type: String, required: true },
+  username: { type: String, required: true },
   password: { type: String, required: true },
-  fullName: { type: UserFullNameSchema, required: true },
+  fullName: {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+  },
   age: { type: Number, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true },
   isActive: { type: Boolean, required: true },
-  hobbies: { type: [String], required: true },
-  address: { type: UserAddressSchema, required: true },
-  orders: { type: [UserOrderSchema] },
-  isDeleted: { type: Boolean },
+  hobbies: [{ type: String }],
+  address: {
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    country: { type: String, required: true },
+  },
+  isDeleted: { type: Boolean, default: false },
 });
+
+//creating a custom static method
+UserSchema.statics.isUserExists = async function (userId: string) {
+  const existingUser = await User.findOne({ userId });
+  return existingUser;
+};
 
 export const User = model<TUser, UserModel>("User", UserSchema);

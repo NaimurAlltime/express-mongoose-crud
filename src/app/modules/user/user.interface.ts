@@ -1,37 +1,33 @@
 import { Model } from "mongoose";
 
-export type TUserFullName = {
-  firstName: string;
-  lastName: string;
-};
-
-export type TUserAddress = {
-  street: string;
-  city: string;
-  country: string;
-};
-
-export type TUserOrder = {
-  productName: string;
-  price: number;
-  quantity: number;
-};
-
 export type TUser = {
   userId: string;
   username: string;
   password: string;
-  fullName: TUserFullName;
+  fullName: {
+    firstName: string;
+    lastName: string;
+  };
   age: number;
   email: string;
   isActive: boolean;
   hobbies: string[];
-  address: TUserAddress;
-  orders?: TUserOrder[];
+  address: {
+    street: string;
+    city: string;
+    country: string;
+  };
+  orders?: [
+    {
+      productName: string;
+      price: number;
+      quantity: number;
+    }
+  ];
   isDeleted?: boolean;
 };
 
 // for creating static
 export interface UserModel extends Model<TUser> {
-  isUserExists(id: string): Promise<TUser | null>;
+  isUserExists(userId: string): Promise<TUser | null>;
 }
