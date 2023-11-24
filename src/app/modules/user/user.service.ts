@@ -37,8 +37,14 @@ const getSingleUserFromDB = async (userId: string) => {
   return result;
 };
 
+const deleteUserFromDB = async (id: string) => {
+  const result = await User.updateOne({ id }, { isDeleted: true });
+  return result;
+};
+
 export const UserService = {
   createUserIntuDB,
   getAllUserFromDB,
   getSingleUserFromDB,
+  deleteUserFromDB,
 };

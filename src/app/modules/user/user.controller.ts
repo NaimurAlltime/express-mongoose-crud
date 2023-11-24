@@ -86,8 +86,32 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const deleteUser = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await UserService.deleteUserFromDB(userId);
+
+    //send response
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully!",
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    // console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+      error: error,
+    });
+  }
+};
+
 export const UserControllers = {
   createController,
   getAllUsers,
   getSingleUser,
+  deleteUser,
 };
