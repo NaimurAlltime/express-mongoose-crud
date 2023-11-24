@@ -4,15 +4,15 @@ import config from "../../config";
 import { TUser, UserModel } from "./user.interface";
 
 const UserSchema = new Schema<TUser, UserModel>({
-  userId: { type: String, required: true },
-  username: { type: String, required: true },
+  userId: { type: String, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   fullName: {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
   },
   age: { type: Number, required: true },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   isActive: { type: Boolean, required: true },
   hobbies: [{ type: String }],
   address: {
