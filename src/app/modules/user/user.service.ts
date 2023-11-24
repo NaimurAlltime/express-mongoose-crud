@@ -24,22 +24,24 @@ const getAllUserFromDB = async () => {
   return result;
 };
 
-const getSingleUserFromDB = async (userId: string) => {
-  const result = await User.findOne({ userId })
-    .select("-password")
-    .lean()
-    .exec();
-  //using aggregate
-  //   const result = await User.aggregate([{ $match: { userId } }]);
+const getSingleUserFromDB = async (userId: string): Promise<TUser | null> => {
+  const result = await User.isUserExists(userId);
   if (!result) {
-    return null; // User not found
+    throw new Error("User not found!");
+  } else {
+    const result = await User.findOne({ userId }).select("-password");
+    return result;
   }
-  return result;
 };
 
-const deleteUserFromDB = async (id: string) => {
-  const result = await User.updateOne({ id }, { isDeleted: true });
-  return result;
+const deleteUserFromDB = async (userId: string) => {
+  const result = await User.isUserExists(userId);
+  if (!result) {
+    throw new Error("User not found!");
+  } else {
+    const result = await User.updateOne({ userId }, { isDeleted: true });
+    return result;
+  }
 };
 
 export const UserService = {

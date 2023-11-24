@@ -49,21 +49,6 @@ const getAllUsers = async (req: Request, res: Response) => {
 };
 
 const getSingleUser = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  const result = await UserService.getSingleUserFromDB(userId);
-
-  if (result === null) {
-    res.status(404).json({
-      success: false,
-      message: "User not found",
-      error: {
-        code: 404,
-        description: "User not found!",
-      },
-    });
-    return;
-  }
-
   try {
     const { userId } = req.params;
 
@@ -80,16 +65,19 @@ const getSingleUser = async (req: Request, res: Response) => {
     // console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message || "Something went wrong",
-      error: error,
+      message: error?.message || "Something went wrong",
+      error: {
+        code: 404,
+        description: error.message,
+      },
     });
   }
 };
 
 const deleteUser = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-
   try {
+    const { userId } = req.params;
+
     const result = await UserService.deleteUserFromDB(userId);
 
     //send response
@@ -103,8 +91,11 @@ const deleteUser = async (req: Request, res: Response) => {
     // console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message || "Something went wrong",
-      error: error,
+      message: error?.message || "Something went wrong",
+      error: {
+        code: 404,
+        description: error.message,
+      },
     });
   }
 };

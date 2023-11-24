@@ -42,23 +42,22 @@ UserSchema.post("save", function (doc: any, next) {
   next();
 });
 
+// get all data only isDeleted property false
+UserSchema.pre("find", function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+// get single data only isDeleted property false
+UserSchema.pre("findOne", function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
 //creating a custom static method
 UserSchema.statics.isUserExists = async function (userId: string) {
   const existingUser = await User.findOne({ userId });
   return existingUser;
 };
-
-//creating a custom static method check single user
-// UserSchema.statics.isUserSingleExists = async function (userId: string) {
-//   const existingSingleUser = await User.findOne({ userId })
-//     .select("-password")
-//     .lean()
-//     .exec();
-//   // return existingSingleUser;
-//   if (!existingSingleUser) {
-//     return null; // User not found
-//   }
-//   return existingSingleUser;
-// };
 
 export const User = model<TUser, UserModel>("User", UserSchema);
