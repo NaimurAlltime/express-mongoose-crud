@@ -18,15 +18,15 @@ const userValidationSchema = z.object({
     country: z.string(),
   }),
   isDeleted: z.boolean().default(false).optional(),
-  //   orders: z.optional(
-  //     z.array(
-  //       z.object({
-  //         productName: z.string(),
-  //         price: z.number(),
-  //         quantity: z.number(),
-  //       })
-  //     )
-  //   ),
+  orders: z.optional(
+    z.array(
+      z.object({
+        productName: z.string(),
+        price: z.number(),
+        quantity: z.number(),
+      })
+    )
+  ),
 });
 
 export default userValidationSchema;

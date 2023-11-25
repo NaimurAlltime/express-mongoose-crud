@@ -70,10 +70,24 @@ const deleteUserFromDB = async (userId: string) => {
   }
 };
 
+const updateOrder = async (userId: string, userData: TUser) => {
+  const result = await User.isUserExists(userId);
+  if (!result) {
+    throw new Error("User not found!");
+  } else {
+    const result = await User.findOneAndUpdate({ userId }, userData, {
+      $addtoset: userData,
+      new: true,
+    });
+    return result;
+  }
+};
+
 export const UserService = {
   createUserIntuDB,
   getAllUserFromDB,
   getSingleUserFromDB,
   updateUserFromDB,
   deleteUserFromDB,
+  updateOrder,
 };

@@ -100,6 +100,32 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateOrder = async (req: Request, res: Response) => {
+  try {
+    //data validation using zod
+    const { users: userData } = req.body;
+    const { userId } = req.params;
+    // const zodParsedData = userValidationSchema.parse(userData);
+
+    const result = await UserService.updateOrder(userId, userData);
+
+    //send response
+    res.status(200).json({
+      success: true,
+      message: "Order created successfully!",
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    // console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+      error: error,
+    });
+  }
+};
+
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -131,5 +157,6 @@ export const UserControllers = {
   getAllUsers,
   getSingleUser,
   updateUser,
+  updateOrder,
   deleteUser,
 };

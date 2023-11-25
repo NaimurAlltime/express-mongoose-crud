@@ -21,6 +21,26 @@ const UserSchema = new Schema<TUser, UserModel>({
     country: { type: String, required: true },
   },
   isDeleted: { type: Boolean, default: false },
+  orders: {
+    type: [
+      {
+        productName: {
+          type: String,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    default: undefined,
+    _id: false,
+  },
 });
 
 // pre save password hash
