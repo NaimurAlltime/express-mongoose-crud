@@ -34,6 +34,32 @@ const getSingleUserFromDB = async (userId: string): Promise<TUser | null> => {
   }
 };
 
+// const updateUserFromDB = async (
+//   userId: string,
+//   userData: TUser
+// ): Promise<TUser | null> => {
+//   const result = await User.updateOne({ userId: userId }, userData, {
+//     new: true,
+//   });
+
+//   return result;
+// };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const updateUserFromDB = async (userId: string, updatedData: any) => {
+  const result = await User.isUserExists(userId);
+  if (!result) {
+    throw new Error("User not found!");
+  } else {
+    const result = await User.findOneAndUpdate({ userId }, updatedData, {
+      $set: updatedData,
+      new: true,
+      // runValidators: true,
+    }).select("-password -orders -__v");
+    return result;
+  }
+};
+
 const deleteUserFromDB = async (userId: string) => {
   const result = await User.isUserExists(userId);
   if (!result) {
@@ -48,5 +74,6 @@ export const UserService = {
   createUserIntuDB,
   getAllUserFromDB,
   getSingleUserFromDB,
+  updateUserFromDB,
   deleteUserFromDB,
 };
