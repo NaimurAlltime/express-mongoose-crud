@@ -1,7 +1,13 @@
 import { Model } from "mongoose";
 
+export type TProduct = {
+  productName: string;
+  price: number;
+  quantity: number;
+};
+
 export type TUser = {
-  userId: string;
+  userId: number;
   username: string;
   password: string;
   fullName: {

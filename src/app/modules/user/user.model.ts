@@ -1,10 +1,31 @@
 import bcrypt from "bcrypt";
 import { model, Schema } from "mongoose";
 import config from "../../config";
-import { TUser, UserModel } from "./user.interface";
+import { TProduct, TUser, UserModel } from "./user.interface";
+
+const ordersSchema = new Schema<TProduct>(
+  {
+    productName: {
+      type: String,
+      required: [true, "Product name is required!"],
+      trim: true,
+    },
+    price: {
+      type: Number,
+      required: [true, "User id is required!"],
+      trim: true,
+    },
+    quantity: {
+      type: Number,
+      required: [true, "User id is required!"],
+      trim: true,
+    },
+  },
+  { _id: false }
+);
 
 const UserSchema = new Schema<TUser, UserModel>({
-  userId: { type: String, required: true, unique: true },
+  userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   fullName: {
@@ -21,26 +42,7 @@ const UserSchema = new Schema<TUser, UserModel>({
     country: { type: String, required: true },
   },
   isDeleted: { type: Boolean, default: false },
-  orders: {
-    type: [
-      {
-        productName: {
-          type: String,
-          required: true,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
-    default: undefined,
-    _id: false,
-  },
+  orders: [ordersSchema],
 });
 
 // pre save password hash
@@ -59,6 +61,7 @@ UserSchema.pre("save", async function (next) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 UserSchema.post("save", function (doc: any, next) {
   doc.password = undefined;
+  doc.orders = undefined;
   next();
 });
 
@@ -75,7 +78,7 @@ UserSchema.pre("findOne", function (next) {
 });
 
 //creating a custom static method
-UserSchema.statics.isUserExists = async function (userId: string) {
+UserSchema.statics.isUserExists = async function (userId: number) {
   const existingUser = await User.findOne({ userId });
   return existingUser;
 };
