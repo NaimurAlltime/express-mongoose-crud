@@ -3,9 +3,9 @@ import { User } from "./user.model";
 
 const createUserIntoDB = async (userData: TUser) => {
   //custom static method
-  // if (await User.isUserExists(userData.userId)) {
-  //   throw new Error("User already exists!");
-  // }
+  if (await User.isUserExists(userData.userId)) {
+    throw new Error("User already exists!");
+  }
 
   //build in static method
   const result = await User.create(userData);
@@ -24,7 +24,7 @@ const getAllUserFromDB = async () => {
   return result;
 };
 
-const getSingleUserFromDB = async (userId: string): Promise<TUser | null> => {
+const getSingleUserFromDB = async (userId: number): Promise<TUser | null> => {
   const result = await User.isUserExists(userId);
   if (!result) {
     throw new Error("User not found!");
@@ -35,7 +35,7 @@ const getSingleUserFromDB = async (userId: string): Promise<TUser | null> => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateUserFromDB = async (userId: string, updatedData: any) => {
+const updateUserFromDB = async (userId: number, updatedData: any) => {
   const result = await User.isUserExists(userId);
   if (!result) {
     throw new Error("User not found!");
@@ -49,7 +49,7 @@ const updateUserFromDB = async (userId: string, updatedData: any) => {
   }
 };
 
-const deleteUserFromDB = async (userId: string) => {
+const deleteUserFromDB = async (userId: number) => {
   const result = await User.isUserExists(userId);
   if (!result) {
     throw new Error("User not found!");
@@ -59,7 +59,7 @@ const deleteUserFromDB = async (userId: string) => {
   }
 };
 
-const updateOrder = async (userId: string, userData: TUser) => {
+const updateOrder = async (userId: number, userData: TUser) => {
   const result = await User.isUserExists(userId);
   if (!result) {
     throw new Error("User not found!");
@@ -75,7 +75,7 @@ const updateOrder = async (userId: string, userData: TUser) => {
 };
 
 const getAllOrdersByIdFromDB = async (
-  userId: string
+  userId: number
 ): Promise<TUser | null> => {
   const result = await User.isUserExists(userId);
   if (!result) {
@@ -87,6 +87,32 @@ const getAllOrdersByIdFromDB = async (
   }
 };
 
+const getOrderTotalPrice = async (userId: number) => {
+  const result = await User.isUserExists(userId);
+  if (!result) {
+    throw new Error("User not found!");
+  } else {
+    const result = await User.aggregate([
+      { $match: { userId } },
+      { $unwind: "$orders" },
+      {
+        $group: {
+          _id: null,
+          totalPrice: {
+            $sum: { $multiply: ["$orders.price", "$orders.quantity"] },
+          },
+        },
+      },
+      {
+        $project: { totalPrice: 1, _id: 0 },
+      },
+    ]);
+    const totalPrice = result[0] ? result[0].totalPrice : 0;
+    const fixedTotalPrice = Number(totalPrice.toFixed(2));
+    return fixedTotalPrice;
+  }
+};
+
 export const UserService = {
   createUserIntuDB: createUserIntoDB,
   getAllUserFromDB,
@@ -95,4 +121,5 @@ export const UserService = {
   deleteUserFromDB,
   updateOrder,
   getAllOrdersByIdFromDB,
+  getOrderTotalPrice,
 };

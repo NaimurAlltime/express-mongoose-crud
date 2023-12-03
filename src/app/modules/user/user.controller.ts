@@ -51,7 +51,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 const getSingleUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId = Number(req.params.userId);
 
     const result = await UserService.getSingleUserFromDB(userId);
 
@@ -79,7 +79,7 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     //data validation using zod
     const { users: userData } = req.body;
-    const { userId } = req.params;
+    const userId = Number(req.params.userId);
     // const zodParsedData = userValidationSchema.parse(userData);
 
     const result = await UserService.updateUserFromDB(userId, userData);
@@ -105,7 +105,7 @@ const updateOrder = async (req: Request, res: Response) => {
   try {
     //data validation using zod
     const productData: TUser = req.body;
-    const { userId } = req.params;
+    const userId = Number(req.params.userId);
     // const zodParsedData = userValidationSchema.parse(userData);
 
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
@@ -130,7 +130,7 @@ const updateOrder = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId = Number(req.params.userId);
 
     const result = await UserService.deleteUserFromDB(userId);
 
@@ -156,7 +156,7 @@ const deleteUser = async (req: Request, res: Response) => {
 
 const getOrdersById = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId = Number(req.params.userId);
 
     const result = await UserService.getAllOrdersByIdFromDB(userId);
 
@@ -180,6 +180,30 @@ const getOrdersById = async (req: Request, res: Response) => {
   }
 };
 
+const getOrderTotalPrice = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const totalPrice = await UserService.getOrderTotalPrice(userId);
+    res.status(200).json({
+      success: true,
+      message: "Total price calculated successfully!",
+      data: {
+        totalPrice,
+      },
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: error?.message || "Something went wrong!",
+      error: {
+        code: 404,
+        description: error?.message,
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
@@ -188,4 +212,5 @@ export const UserControllers = {
   updateOrder,
   getOrdersById,
   deleteUser,
+  getOrderTotalPrice,
 };
