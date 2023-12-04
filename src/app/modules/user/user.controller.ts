@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { TUser } from "./user.interface";
 import { UserService } from "./user.service";
-import userValidationSchema from "./user.validation";
+import { userValidationSchema } from "./user.validation";
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -9,7 +9,7 @@ const createUser = async (req: Request, res: Response) => {
     const { users: userData } = req.body;
     const zodParsedData = userValidationSchema.parse(userData);
 
-    const result = await UserService.createUserIntuDB(zodParsedData);
+    const result = await UserService.createUserIntoDB(zodParsedData);
 
     //send response
     res.status(200).json({
@@ -80,9 +80,9 @@ const updateUser = async (req: Request, res: Response) => {
     //data validation using zod
     const { users: userData } = req.body;
     const userId = Number(req.params.userId);
-    // const zodParsedData = userValidationSchema.parse(userData);
+    const zodParsedData = userValidationSchema.parse(userData);
 
-    const result = await UserService.updateUserFromDB(userId, userData);
+    const result = await UserService.updateUserFromDB(userId, zodParsedData);
 
     //send response
     res.status(200).json({
@@ -106,10 +106,10 @@ const updateOrder = async (req: Request, res: Response) => {
     //data validation using zod
     const productData: TUser = req.body;
     const userId = Number(req.params.userId);
-    // const zodParsedData = userValidationSchema.parse(userData);
+    const zodParsedData = userValidationSchema.parse(productData);
 
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    const result = await UserService.updateOrder(userId, productData);
+    const result = await UserService.updateOrder(userId, zodParsedData);
 
     //send response
     res.status(200).json({

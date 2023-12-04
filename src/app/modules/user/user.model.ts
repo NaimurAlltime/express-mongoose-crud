@@ -25,23 +25,68 @@ const ordersSchema = new Schema<TProduct>(
 );
 
 const UserSchema = new Schema<TUser, UserModel>({
-  userId: { type: Number, required: true, unique: true },
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  userId: {
+    type: Number,
+    required: [true, "User id is required!"],
+    unique: true,
+    trim: true,
+  },
+  username: {
+    type: String,
+    required: [true, "Username is required!"],
+    unique: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Password is required!"],
+    trim: true,
+  },
   fullName: {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    firstName: {
+      type: String,
+      required: [true, "First name is required!"],
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      required: [true, "Last name is required!"],
+      trim: true,
+    },
   },
-  age: { type: Number, required: true },
-  email: { type: String, required: true, unique: true },
-  isActive: { type: Boolean, default: true, required: true },
-  hobbies: [{ type: String }],
+  age: { type: Number, required: [true, "Age is required!"] },
+  email: {
+    type: String,
+    required: [true, "Email is required!"],
+    unique: true,
+    trim: true,
+    lowercase: true,
+  },
+  isActive: {
+    type: Boolean,
+  },
+  hobbies: {
+    type: [String],
+    required: [true, "Hobbies are required!"],
+    trim: true,
+  },
   address: {
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    country: { type: String, required: true },
+    street: {
+      type: String,
+      required: [true, "Username is required!"],
+      trim: true,
+    },
+    city: {
+      type: String,
+      required: [true, "Username is required!"],
+      trim: true,
+    },
+    country: {
+      type: String,
+      required: [true, "Username is required!"],
+      trim: true,
+    },
   },
-  isDeleted: { type: Boolean, default: false },
   orders: [ordersSchema],
 });
 

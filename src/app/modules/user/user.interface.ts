@@ -23,14 +23,7 @@ export type TUser = {
     city: string;
     country: string;
   };
-  orders?: [
-    {
-      productName: string;
-      price: number;
-      quantity: number;
-    }
-  ];
-  isDeleted?: boolean;
+  orders?: TProduct[];
 };
 
 // for creating static

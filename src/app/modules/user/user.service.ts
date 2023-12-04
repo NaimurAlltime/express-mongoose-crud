@@ -114,7 +114,7 @@ const getOrderTotalPrice = async (userId: number) => {
 };
 
 export const UserService = {
-  createUserIntuDB: createUserIntoDB,
+  createUserIntoDB: createUserIntoDB,
   getAllUserFromDB,
   getSingleUserFromDB,
   updateUserFromDB,
