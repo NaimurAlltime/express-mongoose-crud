@@ -29,7 +29,9 @@ const getSingleUserFromDB = async (userId: number): Promise<TUser | null> => {
   if (!result) {
     throw new Error("User not found!");
   } else {
-    const result = await User.findOne({ userId }).select("-password");
+    const result = await User.findOne({ userId }).select(
+      "-password -orders -__v"
+    );
     return result;
   }
 };
@@ -54,7 +56,7 @@ const deleteUserFromDB = async (userId: number) => {
   if (!result) {
     throw new Error("User not found!");
   } else {
-    const result = await User.updateOne({ userId }, { isDeleted: true });
+    const result = await User.deleteOne({ userId });
     return result;
   }
 };
