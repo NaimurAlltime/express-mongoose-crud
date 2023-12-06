@@ -106,10 +106,9 @@ const updateOrder = async (req: Request, res: Response) => {
     //data validation using zod
     const productData: TUser = req.body;
     const userId = Number(req.params.userId);
-    const zodParsedData = userValidationSchema.parse(productData);
 
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    const result = await UserService.updateOrder(userId, zodParsedData);
+    const result = await UserService.updateOrder(userId, productData);
 
     //send response
     res.status(200).json({
